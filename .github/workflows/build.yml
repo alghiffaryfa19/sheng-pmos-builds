@@ -49,7 +49,7 @@ jobs:
       #   run: |
       #     pmbootstrap chroot -- apk add zstd
 
-      - name: Build the xiaomi-sheng without DE
+      - name: Build the xiaomi-sheng base
         run: |
            cp xiaomi-sheng.cfg ~/.config/pmbootstrap_v3.cfg
            pmbootstrap checksum device-xiaomi-sheng
@@ -60,145 +60,23 @@ jobs:
            pmbootstrap install --password 147147
            pmbootstrap export
            cp /tmp/postmarketOS-export/boot.img out/boot-xiaomi-sheng.img
-           cp /tmp/postmarketOS-export/xiaomi-sheng.img out/rootfs-xiaomi-sheng-none.img
 
       - name: Show log
         if: always()
         run: |
           cat /home/runner/.local/var/pmbootstrap/log.txt
 
-      - name: Breakpoint if tests failed for xiaomi-sheng without DE
+      - name: Breakpoint if tests failed
         if: failure()
         uses: namespacelabs/breakpoint-action@v0
         with:
           duration: 30m
           authorized-users: alghiffaryfa19
       
-      - name: Upload artifacts xiaomi-sheng without DE
+      - name: Upload kernel
         uses: actions/upload-artifact@v4
         with:
            name: xiaomi-sheng-none_${{ env.CURRENT_DATE }}
-           path: out/*.img*
-           retention-days: 7
-
-      - name: Build the xiaomi-sheng with KDE Plasma Desktop
-        run: |
-           yes | pmbootstrap zap
-           rm -r out/*
-           pmbootstrap install --password 147147 --add postmarketos-ui-plasma-desktop
-           cat /home/runner/.local/var/pmbootstrap/log.txt
-           pmbootstrap export
-           cp /tmp/postmarketOS-export/boot.img out/boot-xiaomi-sheng.img
-           cp /tmp/postmarketOS-export/xiaomi-sheng.img out/rootfs-xiaomi-sheng-plasma.img
-
-      - name: Breakpoint if tests failed for xiaomi-sheng with KDE Plasma Desktop
-        if: failure()
-        uses: namespacelabs/breakpoint-action@v0
-        with:
-          duration: 30m
-          authorized-users: alghiffaryfa19
-      
-      - name: Upload artifacts xiaomi-sheng with KDE Plasma Desktop
-        uses: actions/upload-artifact@v4
-        with:
-           name: xiaomi-sheng-plasma_${{ env.CURRENT_DATE }}
-           path: out/*.img*
-           retention-days: 7
-
-
-      - name: Build the xiaomi-sheng with KDE Plasma Mobile
-        run: |
-           yes | pmbootstrap zap
-           rm -r out/*
-           pmbootstrap install --password 147147 --add postmarketos-ui-plasma-mobile
-           cat /home/runner/.local/var/pmbootstrap/log.txt
-           pmbootstrap export
-           cp /tmp/postmarketOS-export/boot.img out/boot-xiaomi-sheng.img
-           cp /tmp/postmarketOS-export/xiaomi-sheng.img out/rootfs-xiaomi-sheng-plasma-mobile.img
-
-      - name: Breakpoint if tests failed for xiaomi-sheng with KDE Plasma Mobile
-        if: failure()
-        uses: namespacelabs/breakpoint-action@v0
-        with:
-          duration: 30m
-          authorized-users: alghiffaryfa19
-      
-      - name: Upload artifacts xiaomi-sheng with KDE Plasma Mobile
-        uses: actions/upload-artifact@v4
-        with:
-           name: xiaomi-sheng-plasma_mobile_${{ env.CURRENT_DATE }}
-           path: out/*.img*
-           retention-days: 7
-
-      - name: Build the xiaomi-sheng with Lomiri
-        run: |
-           yes | pmbootstrap zap
-           rm -r out/*
-           pmbootstrap install --password 147147 --add postmarketos-ui-lomiri
-           cat /home/runner/.local/var/pmbootstrap/log.txt
-           pmbootstrap export
-           cp /tmp/postmarketOS-export/boot.img out/boot-xiaomi-sheng.img
-           cp /tmp/postmarketOS-export/xiaomi-sheng.img out/rootfs-xiaomi-sheng-lomiri.img
-
-      - name: Breakpoint if tests failed for xiaomi-sheng with Lomiri
-        if: failure()
-        uses: namespacelabs/breakpoint-action@v0
-        with:
-          duration: 30m
-          authorized-users: alghiffaryfa19
-      
-      - name: Upload artifacts xiaomi-sheng with Lomiri
-        uses: actions/upload-artifact@v4
-        with:
-           name: xiaomi-sheng-lomiri_${{ env.CURRENT_DATE }}
-           path: out/*.img*
-           retention-days: 7
-            
-      - name: Build the xiaomi-sheng with GNOME
-        run: |
-           yes | pmbootstrap zap
-           rm -r out/*
-           pmbootstrap install --password 147147 --add postmarketos-ui-gnome
-           pmbootstrap export
-           cp /tmp/postmarketOS-export/boot.img out/boot-xiaomi-sheng.img
-           cp /tmp/postmarketOS-export/xiaomi-sheng.img out/rootfs-xiaomi-sheng-gnome.img
-
-      - name: Breakpoint if tests failed for xiaomi-sheng with GNOME
-        if: failure()
-        uses: namespacelabs/breakpoint-action@v0
-        with:
-          duration: 30m
-          authorized-users: alghiffaryfa19
-            
-      - name: Upload artifacts xiaomi-sheng with GNOME
-        uses: actions/upload-artifact@v4
-        with:
-           name: xiaomi-sheng-gnome_${{ env.CURRENT_DATE }}
-           path: out/*.img*
-           retention-days: 7
-
-
-      
-      - name: Build the xiaomi-sheng with GNOME Mobile
-        run: |
-           yes | pmbootstrap zap
-           rm -r out/*
-           pmbootstrap install --password 147147 --add postmarketos-ui-gnome-mobile
-           pmbootstrap export
-           cp /tmp/postmarketOS-export/boot.img out/boot-xiaomi-sheng.img
-           cp /tmp/postmarketOS-export/xiaomi-sheng.img out/rootfs-xiaomi-sheng-gnome-mobile.img
-
-      - name: Breakpoint if tests failed for xiaomi-sheng with GNOME Mobile
-        if: failure()
-        uses: namespacelabs/breakpoint-action@v0
-        with:
-          duration: 30m
-          authorized-users: alghiffaryfa19
-            
-      - name: Upload artifacts xiaomi-sheng with GNOME Mobile
-        uses: actions/upload-artifact@v4
-        with:
-           name: xiaomi-sheng-gnome-mobile_${{ env.CURRENT_DATE }}
            path: out/*.img*
            retention-days: 7
                        
