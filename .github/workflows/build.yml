@@ -57,9 +57,7 @@ jobs:
            pmbootstrap checksum linux-postmarketos-qcom-sm8550
            cat ~/.local/var/pmbootstrap/cache_git/pmaports/device/testing/linux-postmarketos-qcom-sm8550/APKBUILD
            pmbootstrap chroot -- apk add zstd
-           pmbootstrap install --password 147147
-           pmbootstrap export
-           cp /tmp/postmarketOS-export/boot.img out/boot-xiaomi-sheng.img
+           pmbootstrap build --force --arch aarch64 linux-postmarketos-qcom-sm8550
 
       - name: Show log
         if: always()
@@ -72,13 +70,6 @@ jobs:
         with:
           duration: 30m
           authorized-users: alghiffaryfa19
-      
-      - name: Upload kernel
-        uses: actions/upload-artifact@v4
-        with:
-           name: xiaomi-sheng-none_${{ env.CURRENT_DATE }}
-           path: out/*.img*
-           retention-days: 7
                        
       - name: Copy xiaomi-sheng kernel
         run: |
