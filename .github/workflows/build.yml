@@ -73,7 +73,6 @@ jobs:
                        
       - name: Copy xiaomi-sheng kernel
         run: |
-           rm -r out/*
            cp ~/.local/var/pmbootstrap/packages/edge/aarch64/linux-postmarketos-qcom-sm8550-*.apk out/
       
       - name: Upload artifacts xiaomi-sheng kernel
