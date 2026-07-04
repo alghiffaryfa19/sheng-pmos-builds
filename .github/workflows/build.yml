@@ -37,7 +37,7 @@ jobs:
 
       - name: Set up pmaports
         run: |
-          echo -e '\n\n' | pmbootstrap init || true
+          pmbootstrap init
           cd ~/.local/var/pmbootstrap/cache_git/pmaports
           git remote
           git remote add sheng https://gitlab.postmarketos.org/alghiffaryfa19/pmaports.git 
@@ -57,6 +57,38 @@ jobs:
            pmbootstrap checksum linux-postmarketos-qcom-sm8550
            cat ~/.local/var/pmbootstrap/cache_git/pmaports/device/testing/linux-postmarketos-qcom-sm8550/APKBUILD
            pmbootstrap install --password 147147
+           pmbootstrap chroot --image -r -- sh -s <<'EOF'
+           set -eu
+      
+           fix_exec() {
+             path="$1"
+             label="$2"
+      
+             if [ -f "$path" ]; then
+               chmod 0755 "$path"
+               echo "✓ $label permissions fixed"
+             else
+               echo "  $path not found, skipped"
+             fi
+           }
+      
+           fix_exec "/usr/bin/adsprpcd" "adsprpcd"
+           fix_exec "/usr/libexec/iio-sensor-proxy" "iio-sensor-proxy"
+           fix_exec "/usr/bin/monitor-sensor" "monitor-sensor"
+           fix_exec "/usr/bin/ssccli" "ssccli"
+      
+           if command -v systemctl >/dev/null 2>&1; then
+             if [ -f /usr/lib/systemd/system/adsprpcd-sensorspd.service ] || \
+                [ -f /etc/systemd/system/adsprpcd-sensorspd.service ]; then
+               systemctl enable adsprpcd-sensorspd.service
+               echo "✓ adsprpcd-sensorspd.service enabled"
+             else
+               echo "  adsprpcd-sensorspd.service not found, skipped"
+             fi
+           else
+             echo "  systemctl not found, skipped"
+           fi
+           EOF
            pmbootstrap export
            cp /tmp/postmarketOS-export/boot.img out/boot-xiaomi-sheng.img
            cp /tmp/postmarketOS-export/xiaomi-sheng.img out/rootfs-xiaomi-sheng-none.img
