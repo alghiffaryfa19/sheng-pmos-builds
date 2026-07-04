@@ -37,12 +37,17 @@ jobs:
 
       - name: Set up pmaports
         run: |
-          pmbootstrap init
+          mkdir -p ~/.config
+          cp xiaomi-sheng.cfg ~/.config/pmbootstrap_v3.cfg
+      
+          yes "" | pmbootstrap --details-to-stdout init
+      
+          test -d ~/.local/var/pmbootstrap/cache_git/pmaports
+      
           cd ~/.local/var/pmbootstrap/cache_git/pmaports
-          git remote
-          git remote add sheng https://gitlab.postmarketos.org/alghiffaryfa19/pmaports.git 
+          git remote add sheng https://gitlab.postmarketos.org/alghiffaryfa19/pmaports.git || true
           git fetch sheng
-          git reset --hard sheng
+          git reset --hard sheng/master || git reset --hard sheng/main
 
 
       - name: Install zstd in chroot
@@ -51,7 +56,6 @@ jobs:
 
       - name: Build the xiaomi-sheng without DE
         run: |
-           cp xiaomi-sheng.cfg ~/.config/pmbootstrap_v3.cfg
            pmbootstrap checksum device-xiaomi-sheng
            pmbootstrap checksum firmware-xiaomi-sheng
            pmbootstrap checksum linux-postmarketos-qcom-sm8550
