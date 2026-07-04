@@ -55,10 +55,10 @@ jobs:
           git remote add sheng https://gitlab.postmarketos.org/alghiffaryfa19/pmaports.git
       
           # Ambil branch dari fork kamu
-          git fetch --depth=1 sheng master
+          git fetch --depth=1 sheng main
       
           # Pakai isi fork kamu, tapi remote origin tetap upstream resmi
-          git checkout -B master FETCH_HEAD
+          git checkout -B main FETCH_HEAD
       
           git remote -v
           git branch --show-current
