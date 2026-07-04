@@ -40,14 +40,22 @@ jobs:
           mkdir -p ~/.config
           cp xiaomi-sheng.cfg ~/.config/pmbootstrap_v3.cfg
       
-          yes "" | pmbootstrap --details-to-stdout init
+          PMB_WORK="$HOME/.local/var/pmbootstrap"
+          PMAPORTS="$PMB_WORK/cache_git/pmaports"
       
-          test -d ~/.local/var/pmbootstrap/cache_git/pmaports
+          rm -rf "$PMAPORTS"
+          mkdir -p "$(dirname "$PMAPORTS")"
       
-          cd ~/.local/var/pmbootstrap/cache_git/pmaports
-          git remote add sheng https://gitlab.postmarketos.org/alghiffaryfa19/pmaports.git || true
-          git fetch sheng
-          git reset --hard sheng/master || git reset --hard sheng/main
+          git clone --depth=1 https://gitlab.postmarketos.org/alghiffaryfa19/pmaports.git "$PMAPORTS"
+      
+          cd "$PMAPORTS"
+          git remote -v
+          git branch --show-current
+          test -d device/testing/device-xiaomi-sheng || find device -maxdepth 3 -name "*sheng*"
+      
+          yes "" | pmbootstrap --details-to-stdout --aports "$PMAPORTS" init
+      
+          pmbootstrap status
 
 
       - name: Install zstd in chroot
