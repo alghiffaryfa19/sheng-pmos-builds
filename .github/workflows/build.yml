@@ -46,11 +46,23 @@ jobs:
           rm -rf "$PMAPORTS"
           mkdir -p "$(dirname "$PMAPORTS")"
       
-          git clone --depth=1 https://gitlab.postmarketos.org/alghiffaryfa19/pmaports.git "$PMAPORTS"
+          # Clone upstream resmi agar pmbootstrap tetap mengenali pmaports
+          git clone --depth=1 https://gitlab.postmarketos.org/postmarketOS/pmaports.git "$PMAPORTS"
       
           cd "$PMAPORTS"
+      
+          # Tambahkan fork kamu
+          git remote add sheng https://gitlab.postmarketos.org/alghiffaryfa19/pmaports.git
+      
+          # Ambil branch dari fork kamu
+          git fetch --depth=1 sheng master
+      
+          # Pakai isi fork kamu, tapi remote origin tetap upstream resmi
+          git checkout -B master FETCH_HEAD
+      
           git remote -v
           git branch --show-current
+      
           test -d device/testing/device-xiaomi-sheng || find device -maxdepth 3 -name "*sheng*"
       
           yes "" | pmbootstrap --details-to-stdout --aports "$PMAPORTS" init
