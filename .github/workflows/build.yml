@@ -80,7 +80,11 @@ jobs:
            pmbootstrap checksum firmware-xiaomi-sheng
            pmbootstrap checksum linux-postmarketos-qcom-sm8550
            cat ~/.local/var/pmbootstrap/cache_git/pmaports/device/testing/linux-postmarketos-qcom-sm8550/APKBUILD
+           # Disable sparse image generation temporarily so pmbootstrap chroot can mount the raw image
+           sed -i 's/deviceinfo_flash_sparse="true"/deviceinfo_flash_sparse="false"/' ~/.local/var/pmbootstrap/cache_git/pmaports/device/testing/device-xiaomi-sheng/deviceinfo
+           
            pmbootstrap install --password 147147
+           
            pmbootstrap chroot --image -r -- sh -s <<'EOF'
            set -eu
       
@@ -115,7 +119,10 @@ jobs:
            EOF
            pmbootstrap export
            cp /tmp/postmarketOS-export/boot.img out/boot-xiaomi-sheng.img
-           cp /tmp/postmarketOS-export/xiaomi-sheng.img out/rootfs-xiaomi-sheng-none.img
+           
+           # Convert raw image back to sparse image before copying to output
+           pmbootstrap chroot -- img2simg /home/pmos/rootfs/xiaomi-sheng.img /home/pmos/rootfs/xiaomi-sheng-sparse.img
+           cp /tmp/postmarketOS-export/xiaomi-sheng-sparse.img out/rootfs-xiaomi-sheng-none.img
 
       - name: Show log
         if: always()
